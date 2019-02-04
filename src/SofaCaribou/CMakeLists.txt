@@ -5,6 +5,7 @@ set(HEADER_FILES
     GraphComponents/Forcefield/HexahedronElasticForce.h
     GraphComponents/Forcefield/TractionForce.h
     GraphComponents/Ode/StaticODESolver.h
+    GraphComponents/IO/SystemExporter.h
     Traits.h)
 
 set(TEMPLATE_FILES
@@ -14,6 +15,7 @@ set(SOURCE_FILES
     GraphComponents/Forcefield/HexahedronElasticForce.cpp
     GraphComponents/Forcefield/TractionForce.cpp
     GraphComponents/Ode/StaticODESolver.cpp
+    GraphComponents/IO/SystemExporter.cpp
     init.cpp)
 
 # Try to find Sofa's cmake prefix

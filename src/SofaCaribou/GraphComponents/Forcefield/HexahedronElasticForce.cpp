@@ -1,8 +1,10 @@
 #include <numeric>
+#include<fstream>
 
 #include <sofa/core/visual/VisualParams.h>
 #include <sofa/core/ObjectFactory.h>
 #include <sofa/simulation/Node.h>
+#include <SofaBaseLinearSolver/SparseMatrix.h>
 
 #include <SofaCaribou/Traits.h>
 #include <Caribou/Geometry/Hexahedron.h>
@@ -170,6 +172,36 @@ void HexahedronElasticForce<DataTypes>::reinit()
             return B.T() * C * B;
         });
     }
+
+    sofa::component::linearsolver::SparseMatrix <double> K;
+    K.resize(X.size()*3, X.size()*3);
+    unsigned int usefuckingless=0;
+    addKToMatrix(&K, 1., usefuckingless);
+
+    std::ostringstream buffer;
+    std::size_t counter = 0;
+    for (auto it = K.begin(); it != K.end(); ++it) {
+        const auto row_id = (*it).first;
+        const auto columns = (*it).second;
+        for (auto column : columns) {
+            const auto column_id = column.first;
+            const auto value = column.second;
+
+            buffer << row_id+1 << "\t" << column_id+1 << "\t" << std::scientific << value << "\n";
+            ++counter;
+        }
+    }
+
+
+    auto number_of_cols = (std::size_t) K.colSize();
+    auto number_of_rows = (std::size_t) K.rowSize();
+
+    std::ofstream export_file;
+    export_file.open ("matrix.mtx");
+    export_file << "%%MatrixMarket matrix coordinate real general\n";
+    export_file << number_of_rows << '\t' << number_of_cols << '\t' << counter << '\n';
+    export_file << buffer.str();
+    export_file.close();
 }
 
 template<class DataTypes>

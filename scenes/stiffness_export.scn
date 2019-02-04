@@ -1,0 +1,21 @@
+<Node name="root" gravity="0 0 0" dt="0.001">
+    <VisualStyle displayFlags="showBehaviorModels showForceFields" />
+
+    <Node name="cylinder_caribou">
+        <StaticSolver />
+        <SparseLUSolver />
+
+        <MeshGmshLoader name="mesh" filename="/Users/jnbrunet/Downloads/beam.msh" />
+        <!--<RegularGridTopology name="mesh" min="-5 -1 0" max="5 1 1" n="50 10 10" />-->
+        <!--<RegularGridTopology name="mesh" min="-5 -1 0" max="5 1 1" n="5 2 2" />-->
+
+        <MechanicalObject src="@mesh" showObject="true" showObjectScale="5"/>
+        <HexahedronSetTopologyContainer name="hexahedron_container" src="@mesh" />
+        <HexahedronElasticForce poissonRatio="0.35" youngModulus="210000" printLog="true" linearStrain="true" corotated="true" />
+        <BoxROI name="fixed_roi" box="-5.001 -1.001 -0.999      -4.999 1.001 1.001" />
+        <FixedConstraint indices="@fixed_roi.indices" />
+
+        <BoxROI name="press_roi" box="4.999 -1.001 -0.999      5.001 1.001 1.001" />
+        <ConstantForceField indices="@press_roi.indices" totalForce="0 -2000 0" />
+    </Node>
+</Node>
